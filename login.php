@@ -9,7 +9,10 @@ if (isset($_SESSION['user_id'])) {
     exit();
 }
 
-include 'includes/db_connect.php'; // Incluir la conexión a la base de datos
+include 'includes/db_connect.php'; 
+
+// Variables para manejar mensajes de error
+$error = '';
 
 // Procesar el formulario cuando se envíe
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -35,28 +38,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: index.php");
             exit();
         } else {
-            echo "<p>Contraseña incorrecta. Intenta de nuevo.</p>";
+            $error = "Contraseña incorrecta. Intenta de nuevo.";
         }
     } else {
-        echo "<p>Usuario no encontrado. Verifica tu nombre de usuario.</p>";
+        $error = "Usuario no encontrado. Verifica tu nombre de usuario.";
     }
 }
 ?>
 
-<h2>Login</h2>
-<form method="post" action="login.php">
-    <label for="username">Usuario:</label>
-    <input type="text" id="username" name="username" required><br><br>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <h5 class="card-header bg-dark text-white text-center">Ingrese sus credenciales</h5>
+                <div class="card-body">
+                    <?php if (!empty($error)): ?>
+                        <div class="alert alert-danger"><?php echo $error; ?></div>
+                    <?php endif; ?>
+                    <form method="post" action="login.php">
+                        <div class="form-group">
+                            <label for="username">Usuario:</label>
+                            <input type="text" id="username" name="username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Contraseña:</label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
+                    </form>
+                    <p class="mt-3">¿No tienes una cuenta? <a href="register.php">Regístrate aquí</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <label for="password">Contraseña:</label>
-    <input type="password" id="password" name="password" required><br><br>
-
-    <input type="submit" value="Login">
-</form>
-
-<p>¿No tienes una cuenta? <a href="register.php">Regístrate aquí</a></p>
-
-<?php
-include 'includes/footer.php'; 
-?>
+<?php include 'includes/footer.php'; ?>
 
